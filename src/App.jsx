@@ -16,10 +16,9 @@ function App() {
   const [nickname, setNickname] = useState('');
   const [messages, setMessages] = useState([]);
 
-  // let usersCount = messages.length ? messages.filter(message => message.name === 'SYSTEM')[0].usersCount : 0;
-
   useEffect(() => {
     socket.on('chat-message', message => {
+      playSound();
       setMessages(prevState => {
         const newMessage = {
           id: nanoid(),
@@ -27,7 +26,6 @@ function App() {
           name: message.name,
           message: message.message
         }
-        playSound();
         return [newMessage, ...prevState];
       });
     })

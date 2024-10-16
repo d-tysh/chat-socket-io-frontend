@@ -5,6 +5,8 @@ import { io } from "socket.io-client";
 import { NameForm } from "./components/NameForm"
 import { MessageForm } from "./components/MessageForm"
 import { Chat } from "./components/Chat"
+import { ActiveUsers } from "./components/ActiveUsers";
+import { playSound } from "./utils/playSound";
 
 const { VITE_API_URL } = import.meta.env;
 
@@ -13,6 +15,8 @@ const socket = io.connect(VITE_API_URL);
 function App() {
   const [nickname, setNickname] = useState('');
   const [messages, setMessages] = useState([]);
+
+  // let usersCount = messages.length ? messages.filter(message => message.name === 'SYSTEM')[0].usersCount : 0;
 
   useEffect(() => {
     socket.on('chat-message', message => {
@@ -23,6 +27,7 @@ function App() {
           name: message.name,
           message: message.message
         }
+        playSound();
         return [newMessage, ...prevState];
       });
     })
@@ -35,7 +40,8 @@ function App() {
           id: nanoid(),
           type: 'user',
           name: message.name,
-          message: message.message
+          message: message.message,
+          usersCount: message.usersCount
         }
         return [newMessage, ...prevState];
       });
@@ -68,6 +74,7 @@ function App() {
           <>
             <h2>User: {nickname}</h2>
             <MessageForm nickname={nickname} onSubmit={addMessage} />
+            <ActiveUsers messages={messages} />
             <Chat items={messages} />
           </>
       }

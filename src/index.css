@@ -127,3 +127,8 @@ button:focus-visible {
   max-width: 600px;
   padding: 16px;
 }
+
+.active-users {
+  text-align: center;
+  margin-top: 16px;
+}
